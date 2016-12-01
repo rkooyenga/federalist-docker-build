@@ -16,6 +16,13 @@ for i in `find . | grep -E "\.html$|\.css$|\.js$|\.json$|\.svg$"`; do
   fi
 done
 
+# this is necessary for some reason
+AWS_ACCESS_KEY_ID=$(echo $AWS_ACCESS_KEY_ID | sed "s/\"//g")
+AWS_DEFAULT_REGION=$(echo $AWS_DEFAULT_REGION | sed "s/\"//g")
+AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY | sed "s/\"//g")
+BUCKET=$(echo $BUCKET | sed "s/\"//g")
+PREFIX=$(echo $PREFIX | sed "s/\"//g")
+
 # sync compressed files
 aws s3 sync . s3://${BUCKET}/${PREFIX}/ --no-follow-symlinks \
   --delete --content-encoding gzip --cache-control $CACHE_CONTROL --exclude "*" \

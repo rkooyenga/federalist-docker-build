@@ -3,6 +3,9 @@
 # Post to webhook on completion
 post () {
 
+  # Echo the output before sending status message in case build status update fails
+  echo $output
+
   # Capture exit status
   status=$?
 
@@ -25,6 +28,6 @@ post () {
 trap post 0 # EXIT signal
 
 # Run scripts
-output=$($(dirname $0)/clone.sh 2>&1)
-output=$($(dirname $0)/build.sh 2>&1)
-output=$($(dirname $0)/publish.sh 2>&1)
+output=$(env -i - $(. $(dirname $0)/environment.sh clone) $(dirname $0)/clone.sh 2>&1)
+output=$(env -i - $(. $(dirname $0)/environment.sh build) $(dirname $0)/build.sh 2>&1)
+output=$(env -i - $(. $(dirname $0)/environment.sh publish) $(dirname $0)/publish.sh 2>&1)
